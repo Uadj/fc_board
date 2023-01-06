@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("View Controller")
 @WebMvcTest(ArticleController.class)
-@Disabled
 public class ArticleControllerTest {
 
     private final MockMvc mvc;
@@ -31,7 +30,7 @@ public class ArticleControllerTest {
         //when
         mvc.perform(get("/articles"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles"));
         //then
