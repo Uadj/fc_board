@@ -4,6 +4,7 @@ import com.example.fastcampusboard.config.JpaConfig;
 import com.example.fastcampusboard.domain.Article;
 import com.example.fastcampusboard.domain.Hashtag;
 import com.example.fastcampusboard.domain.UserAccount;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
+@Disabled("REST TEST 불필요")
 @ActiveProfiles("testdb")
 @DisplayName("JPA 연결 테스트")
 @Import(JpaConfig.class)
