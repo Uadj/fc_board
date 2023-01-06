@@ -4,6 +4,7 @@
 
 생략된 application.yml 내용
 
+'''
 debug: false
 management:
   endpoints:
@@ -21,9 +22,6 @@ spring:
     username: 계정을 입력하세요
     password: 패스워드를 입력하세요
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:h2:mem:testdb
-#    username: sa
-#    driver-class-name: org.h2.Driver
   jpa:
     defer-datasource-initialization: true
     hibernate:
@@ -44,16 +42,4 @@ spring:
       base-path: /api
       detection-strategy: annotated
 
-#---
-#
-#spring:
-#  config:
-#    activate:
-#      on-cloud-platform: testdb
-#  datasource:
-#    url: jdbc:h2:mem:fcboard;mode=mysql
-#    driver-class-name: org.h2.Driver
-#  sql:
-#    init:
-#      mode: always
-#  test.database.replace: none
+'''
