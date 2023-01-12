@@ -1,4 +1,4 @@
-package com.example.fastcampusboard.domain;
+package com.example.fastcampusboard.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
