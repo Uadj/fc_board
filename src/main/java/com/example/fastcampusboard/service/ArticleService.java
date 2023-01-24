@@ -42,7 +42,9 @@ public class ArticleService {
                     .map(ArticleDto::from);
         };
     }
-
+    public long getArticleCount() {
+        return articleRepository.count();
+    }
     public void saveArticle(ArticleDto dto, UserAccount userAccount) {
         articleRepository.save(dto.toEntity(userAccount));
     }

@@ -9,29 +9,43 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record ArticleDto(Long id, LocalDateTime createdAt, String createdBy,
-                         LocalDateTime modifiedAt, String modifiedBy,
-                         String title, String content,
-                         Set<HashtagDto> hashtags){
-    public static ArticleDto of(Long id, String title, String content, Set<HashtagDto> hashtagDtos) {
-        return new ArticleDto(null, null, null, null, null, title, content, hashtagDtos);
+public record ArticleDto(
+        Long id,
+        UserAccountDto userAccountDto,
+        String title,
+        String content,
+        Set<HashtagDto> hashtagDtos,
+        LocalDateTime createdAt,
+        String createdBy,
+        LocalDateTime modifiedAt,
+        String modifiedBy
+) {
+    public static ArticleDto of(UserAccountDto userAccountDto, String title, String content, Set<HashtagDto> hashtagDtos) {
+        return new ArticleDto(null, userAccountDto, title, content, hashtagDtos, null, null, null, null);
+    }
+
+    public static ArticleDto of(Long id, UserAccountDto userAccountDto, String title, String content, Set<HashtagDto> hashtagDtos, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+        return new ArticleDto(id, userAccountDto, title, content, hashtagDtos, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     public static ArticleDto from(Article entity) {
         return new ArticleDto(
-        entity.getId(),
-        entity.getCreatedAt(),
-        entity.getCreatedBy(),
-        entity.getModifiedAt(),
-        entity.getModifiedBy(),
-        entity.getTitle(),
-        entity.getContent(),
-        entity.getHashtags().stream().
-                map(HashtagDto::from).
-                collect(Collectors.toUnmodifiableSet())
-                );
+                entity.getId(),
+                UserAccountDto.from(entity.getUserAccount()),
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getHashtags().stream()
+                        .map(HashtagDto::from)
+                        .collect(Collectors.toUnmodifiableSet())
+                ,
+                entity.getCreatedAt(),
+                entity.getCreatedBy(),
+                entity.getModifiedAt(),
+                entity.getModifiedBy()
+        );
     }
-    public Article toEntity(UserAccount userAccount){
+
+    public Article toEntity(UserAccount userAccount) {
         return Article.of(
                 userAccount,
                 title,

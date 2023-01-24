@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
@@ -32,12 +34,13 @@ public class ArticleServiceTest {
     @Test
     void givenArticleId_whenSearchingArticle_thenReturnArticle(){
         //given
-
+        Long articleId = 1L;
         //when
-        ArticleWithCommentsDto articleWithCommentsDto = articleService.searchArticle(1L);
+        given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
         //then
-        assertThat(articleWithCommentsDto).isNotNull();
+        then(articleRepository).should().findById(articleId);
     }
+
     @DisplayName("게시글을 검색하면 게시글 리스트를 반환")
     @Test
     void givenSearchParameters_whenSearchingArticles_thenReturnArticleList(){
@@ -54,7 +57,7 @@ public class ArticleServiceTest {
         //given
         given(articleRepository.save(any(Article.class))).willReturn(null);
         //when
-        articleService.saveArticle(ArticleDto.of(1L, "title", "content", null), null);
+        articleService.saveArticle(ArticleDto.of(null, "title", "content", null), null);
         //then
         then(articleRepository).should().save(any(Article.class));
     }
@@ -64,7 +67,7 @@ public class ArticleServiceTest {
         //given
         given(articleRepository.save(any(Article.class))).willReturn(null);
         //when
-        articleService.updateArticle(1L, ArticleDto.of(1L, "title", "content", null));
+        articleService.updateArticle(1L, ArticleDto.of(null, "title", "content", null));
         //then
         then(articleRepository).should().save(any(Article.class));
     }
@@ -77,5 +80,19 @@ public class ArticleServiceTest {
         articleService.deleteArticle(1L);
         //then
         then(articleRepository).should().delete(any(Article.class));
+    }
+    @DisplayName("게시글 수를 조회하면, 게시글 수를 반환한다")
+    @Test
+    void givenNothing_whenCountingArticles_thenReturnsArticleCount() {
+        // Given
+        long expected = 0L;
+        given(articleRepository.count()).willReturn(expected);
+
+        // When
+        long actual = articleService.getArticleCount();
+
+        // Then
+        assertThat(actual).isEqualTo(expected);
+        then(articleRepository).should().count();
     }
 }
