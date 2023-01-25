@@ -1,7 +1,10 @@
 package com.example.fastcampusboard.service;
 
 import com.example.fastcampusboard.domain.Article;
+import com.example.fastcampusboard.domain.Hashtag;
+import com.example.fastcampusboard.domain.UserAccount;
 import com.example.fastcampusboard.dto.ArticleWithCommentsDto;
+import com.example.fastcampusboard.dto.HashtagDto;
 import com.example.fastcampusboard.type.SearchType;
 import com.example.fastcampusboard.dto.ArticleDto;
 import com.example.fastcampusboard.repository.ArticleRepository;
@@ -13,8 +16,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,26 +36,41 @@ public class ArticleServiceTest {
     @Mock
     private ArticleRepository articleRepository;
 
-    @DisplayName("게시글을 조회하면 게시글을 반환")
+    @DisplayName("게시글 ID로 조회하면, 댓글 달긴 게시글을 반환한다.")
     @Test
-    void givenArticleId_whenSearchingArticle_thenReturnArticle(){
-        //given
+    void givenArticleId_whenSearchingArticleWithComments_thenReturnsArticleWithComments() {
+        // Given
         Long articleId = 1L;
-        //when
+        Article article = createArticle();
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
-        //then
+
+        // When
+        ArticleWithCommentsDto dto = articleService.getArticleWithComments(articleId);
+
+        // Then
+        assertThat(dto)
+                .hasFieldOrPropertyWithValue("title", article.getTitle())
+                .hasFieldOrPropertyWithValue("content", article.getContent())
+                .hasFieldOrPropertyWithValue("hashtagDtos", article.getHashtags().stream()
+                        .map(HashtagDto::from)
+                        .collect(Collectors.toUnmodifiableSet())
+                );
         then(articleRepository).should().findById(articleId);
     }
 
     @DisplayName("게시글을 검색하면 게시글 리스트를 반환")
     @Test
     void givenSearchParameters_whenSearchingArticles_thenReturnArticleList(){
-        //given
+        // given
         Pageable pageable = Pageable.ofSize(20);
-        //when
-        Page<ArticleDto> articles = articleService.searchArticles(SearchType.TITLE, "search keyword", pageable);
-        //then
-        assertThat(articles).isNotNull();
+        given(articleRepository.findAll(pageable)).willReturn(Page.empty());
+
+        // when
+        Page<ArticleDto> articles = articleService.searchArticles(null, null, pageable);
+
+        // then
+        assertThat(articles).isEmpty();
+        then(articleRepository).should().findAll(pageable);
     }
     @DisplayName("게시글 정보를 입력하면, 게시글을 생성한다.")
     @Test
@@ -95,4 +116,47 @@ public class ArticleServiceTest {
         assertThat(actual).isEqualTo(expected);
         then(articleRepository).should().count();
     }
+
+    private UserAccount createUserAccount() {
+        return createUserAccount("uno");
+    }
+
+    private UserAccount createUserAccount(String userId) {
+        return UserAccount.of(
+                userId,
+                "password",
+                "uno@email.com",
+                "Uno",
+                null
+        );
+    }
+    private Article createArticle() {
+        return createArticle(1L);
+    }
+
+    private Article createArticle(Long id) {
+        Article article = Article.of(
+                createUserAccount(),
+                "title",
+                "content"
+        );
+        article.addHashtags(Set.of(
+                createHashtag(1L, "java"),
+                createHashtag(2L, "spring")
+        ));
+        ReflectionTestUtils.setField(article, "id", id);
+
+        return article;
+    }
+    private Hashtag createHashtag(String hashtagName) {
+        return createHashtag(1L, hashtagName);
+    }
+
+    private Hashtag createHashtag(Long id, String hashtagName) {
+        Hashtag hashtag = Hashtag.of(hashtagName);
+        ReflectionTestUtils.setField(hashtag, "id", id);
+
+        return hashtag;
+    }
+
 }
