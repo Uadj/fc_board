@@ -1,7 +1,10 @@
 package com.example.fastcampusboard.controller;
 
+import com.example.fastcampusboard.domain.ArticleRequest;
+import com.example.fastcampusboard.domain.constant.FormStatus;
 import com.example.fastcampusboard.dto.response.ArticleResponse;
 import com.example.fastcampusboard.dto.response.ArticleWithCommentsResponse;
+import com.example.fastcampusboard.dto.security.BoardPrincipal;
 import com.example.fastcampusboard.service.ArticleService;
 import com.example.fastcampusboard.service.PaginationService;
 import com.example.fastcampusboard.type.SearchType;
@@ -10,12 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -50,4 +51,21 @@ public class ArticleController {
 
         return "articles/detail";
     }
+    @GetMapping("/form")
+    public String articleForm(ModelMap map) {
+        map.addAttribute("formStatus", FormStatus.CREATE);
+
+        return "articles/form";
+    }
+
+    @PostMapping("/form")
+    public String postNewArticle(
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
+        articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()));
+
+        return "redirect:/articles";
+    }
+
 }

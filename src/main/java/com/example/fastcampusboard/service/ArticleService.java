@@ -1,6 +1,7 @@
 package com.example.fastcampusboard.service;
 
 import com.example.fastcampusboard.domain.Article;
+import com.example.fastcampusboard.domain.Hashtag;
 import com.example.fastcampusboard.domain.UserAccount;
 import com.example.fastcampusboard.dto.ArticleWithCommentsDto;
 import com.example.fastcampusboard.repository.ArticleRepository;
@@ -17,14 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class ArticleService {
+    private final HashtagService hashtagService;
     private final ArticleRepository articleRepository;
-
+    private final UserAccountRepository userAccountRepository;
+    private final HashtagRepository hashtagRepository;
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchArticles(SearchType searchType, String search_keyword, Pageable pageable) {
         if(search_keyword == null || search_keyword.isBlank()){
@@ -51,8 +56,13 @@ public class ArticleService {
     public long getArticleCount() {
         return articleRepository.count();
     }
-    public void saveArticle(ArticleDto dto, UserAccount userAccount) {
-        articleRepository.save(dto.toEntity(userAccount));
+    public void saveArticle(ArticleDto dto) {
+        UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+        Set<Hashtag> hashtags = renewHashtagsFromContent(dto.content());
+
+        Article article = dto.toEntity(userAccount);
+        article.addHashtags(hashtags);
+        articleRepository.save(article);
     }
 
     public void updateArticle(Long id, ArticleDto dto) {
@@ -68,4 +78,21 @@ public class ArticleService {
     public void deleteArticle(Long articleId) {
         articleRepository.deleteById(articleId);
     }
+
+    private Set<Hashtag> renewHashtagsFromContent(String content) {
+        Set<String> hashtagNamesInContent = hashtagService.parseHashtagNames(content);
+        Set<Hashtag> hashtags = hashtagService.findHashtagsByNames(hashtagNamesInContent);
+        Set<String> existingHashtagNames = hashtags.stream()
+                .map(Hashtag::getHashtagName)
+                .collect(Collectors.toUnmodifiableSet());
+
+        hashtagNamesInContent.forEach(newHashtagName -> {
+            if (!existingHashtagNames.contains(newHashtagName)) {
+                hashtags.add(Hashtag.of(newHashtagName));
+            }
+        });
+
+        return hashtags;
+    }
+
 }
