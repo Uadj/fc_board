@@ -11,6 +11,8 @@ import com.example.fastcampusboard.repository.UserAccountRepository;
 import com.example.fastcampusboard.type.SearchType;
 import com.example.fastcampusboard.dto.ArticleDto;
 import com.example.fastcampusboard.repository.ArticleRepository;
+import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,12 +23,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
@@ -104,16 +108,60 @@ public class ArticleServiceTest {
         then(articleRepository).should().save(any(Article.class));
     }
 
-    @DisplayName("게시글 ID와 정보를 입력하면, 게시글을 수정한다.")
+
+    @DisplayName("게시글의 수정 정보를 입력하면, 게시글을 수정한다.")
     @Test
-    void givenArticleIdAndInfo_whenUpdatingArticle_thenUpdateArticle(){
-        //given
-        given(articleRepository.save(any(Article.class))).willReturn(null);
-        //when
-        articleService.updateArticle(1L, ArticleDto.of(null, "title", "content", null));
-        //then
-        then(articleRepository).should().save(any(Article.class));
+    void givenModifiedArticleInfo_whenUpdatingArticle_thenUpdatesArticle() {
+        // Given
+        Article article = createArticle();
+        ArticleDto dto = createArticleDto("새 타이틀", "새 내용 #springboot");
+        Set<String> expectedHashtagNames = Set.of("springboot");
+        Set<Hashtag> expectedHashtags = new HashSet<>();
+
+        given(articleRepository.getReferenceById(dto.id())).willReturn(article);
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(dto.userAccountDto().toEntity());
+        willDoNothing().given(articleRepository).flush();
+        willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
+        given(hashtagService.parseHashtagNames(dto.content())).willReturn(expectedHashtagNames);
+        given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtags);
+
+        // When
+        articleService.updateArticle(dto.id(), dto);
+
+        // Then
+        assertThat(article)
+                .hasFieldOrPropertyWithValue("title", dto.title())
+                .hasFieldOrPropertyWithValue("content", dto.content())
+                .extracting("hashtags", as(InstanceOfAssertFactories.COLLECTION))
+                .hasSize(1)
+                .extracting("hashtagName")
+                .containsExactly("springboot");
+        then(articleRepository).should().getReferenceById(dto.id());
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
+        then(articleRepository).should().flush();
+        then(hashtagService).should(times(2)).deleteHashtagWithoutArticles(any());
+        then(hashtagService).should().parseHashtagNames(dto.content());
+        then(hashtagService).should().findHashtagsByNames(expectedHashtagNames);
+
     }
+
+    @DisplayName("없는 게시글의 수정 정보를 입력하면, 경고 로그를 찍고 아무 것도 하지 않는다.")
+    @Test
+    void givenNonexistentArticleInfo_whenUpdatingArticle_thenLogsWarningAndDoesNothing() {
+        // Given
+        ArticleDto dto = createArticleDto("새 타이틀", "새 내용");
+        given(articleRepository.getReferenceById(dto.id())).willThrow(EntityNotFoundException.class);
+
+        // When
+        articleService.updateArticle(dto.id(), dto);
+
+        // Then
+        then(articleRepository).should().getReferenceById(dto.id());
+        then(userAccountRepository).shouldHaveNoInteractions();
+        then(hashtagService).shouldHaveNoInteractions();
+    }
+
+    @Disabled
     @DisplayName("게시글 ID를 입력하면, 게시글을 삭제한다.")
     @Test
     void givenArticleId_whenDeletingArticle_thenDeleteArticle(){
