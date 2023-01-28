@@ -96,10 +96,17 @@ public class ArticleService {
         }
     }
 
-    public void deleteArticle(Long articleId) {
-        articleRepository.deleteById(articleId);
-    }
+    public void deleteArticle(long articleId, String userId) {
+        Article article = articleRepository.getReferenceById(articleId);
+        Set<Long> hashtagIds = article.getHashtags().stream()
+                .map(Hashtag::getId)
+                .collect(Collectors.toUnmodifiableSet());
 
+        articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
+        articleRepository.flush();
+
+        hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
+    }
     private Set<Hashtag> renewHashtagsFromContent(String content) {
         Set<String> hashtagNamesInContent = hashtagService.parseHashtagNames(content);
         Set<Hashtag> hashtags = hashtagService.findHashtagsByNames(hashtagNamesInContent);
