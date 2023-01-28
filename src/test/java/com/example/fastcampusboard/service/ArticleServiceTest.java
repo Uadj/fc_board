@@ -161,16 +161,25 @@ public class ArticleServiceTest {
         then(hashtagService).shouldHaveNoInteractions();
     }
 
-    @Disabled
-    @DisplayName("게시글 ID를 입력하면, 게시글을 삭제한다.")
+    @DisplayName("게시글의 ID를 입력하면, 게시글을 삭제한다.")
     @Test
-    void givenArticleId_whenDeletingArticle_thenDeleteArticle(){
-        //given
-        willDoNothing().given(articleRepository).delete(any(Article.class));
-        //when
-        articleService.deleteArticle(1L);
-        //then
-        then(articleRepository).should().delete(any(Article.class));
+    void givenArticleId_whenDeletingArticle_thenDeletesArticle() {
+        // Given
+        Long articleId = 1L;
+        String userId = "uno";
+        given(articleRepository.getReferenceById(articleId)).willReturn(createArticle());
+        willDoNothing().given(articleRepository).deleteByIdAndUserAccount_UserId(articleId, userId);
+        willDoNothing().given(articleRepository).flush();
+        willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
+
+        // When
+        articleService.deleteArticle(1L, userId);
+
+        // Then
+        then(articleRepository).should().getReferenceById(articleId);
+        then(articleRepository).should().deleteByIdAndUserAccount_UserId(articleId, userId);
+        then(articleRepository).should().flush();
+        then(hashtagService).should(times(2)).deleteHashtagWithoutArticles(any());
     }
     @DisplayName("게시글 수를 조회하면, 게시글 수를 반환한다")
     @Test
