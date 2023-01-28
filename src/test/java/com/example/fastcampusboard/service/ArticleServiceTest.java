@@ -5,6 +5,9 @@ import com.example.fastcampusboard.domain.Hashtag;
 import com.example.fastcampusboard.domain.UserAccount;
 import com.example.fastcampusboard.dto.ArticleWithCommentsDto;
 import com.example.fastcampusboard.dto.HashtagDto;
+import com.example.fastcampusboard.dto.UserAccountDto;
+import com.example.fastcampusboard.repository.HashtagRepository;
+import com.example.fastcampusboard.repository.UserAccountRepository;
 import com.example.fastcampusboard.type.SearchType;
 import com.example.fastcampusboard.dto.ArticleDto;
 import com.example.fastcampusboard.repository.ArticleRepository;
@@ -18,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,8 +38,11 @@ public class ArticleServiceTest {
     @InjectMocks
     private ArticleService articleService;
 
-    @Mock
-    private ArticleRepository articleRepository;
+    @Mock private HashtagService hashtagService;
+    @Mock private ArticleRepository articleRepository;
+    @Mock private UserAccountRepository userAccountRepository;
+    @Mock private HashtagRepository hashtagRepository;
+
 
     @DisplayName("게시글 ID로 조회하면, 댓글 달긴 게시글을 반환한다.")
     @Test
@@ -72,16 +80,30 @@ public class ArticleServiceTest {
         assertThat(articles).isEmpty();
         then(articleRepository).should().findAll(pageable);
     }
-    @DisplayName("게시글 정보를 입력하면, 게시글을 생성한다.")
+    @DisplayName("게시글 정보를 입력하면, 본문에서 해시태그 정보를 추출하여 해시태그 정보가 포함된 게시글을 생성한다.")
     @Test
-    void givenArticleInfo_whenSavingArticle_thenSaveArticle(){
-        //given
-        given(articleRepository.save(any(Article.class))).willReturn(null);
-        //when
-        articleService.saveArticle(ArticleDto.of(null, "title", "content", null), null);
-        //then
+    void givenArticleInfo_whenSavingArticle_thenExtractsHashtagsFromContentAndSavesArticleWithExtractedHashtags() {
+        // Given
+        ArticleDto dto = createArticleDto();
+        Set<String> expectedHashtagNames = Set.of("java", "spring");
+        Set<Hashtag> expectedHashtags = new HashSet<>();
+        expectedHashtags.add(createHashtag("java"));
+
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
+        given(hashtagService.parseHashtagNames(dto.content())).willReturn(expectedHashtagNames);
+        given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtags);
+        given(articleRepository.save(any(Article.class))).willReturn(createArticle());
+
+        // When
+        articleService.saveArticle(dto);
+
+        // Then
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
+        then(hashtagService).should().parseHashtagNames(dto.content());
+        then(hashtagService).should().findHashtagsByNames(expectedHashtagNames);
         then(articleRepository).should().save(any(Article.class));
     }
+
     @DisplayName("게시글 ID와 정보를 입력하면, 게시글을 수정한다.")
     @Test
     void givenArticleIdAndInfo_whenUpdatingArticle_thenUpdateArticle(){
@@ -148,6 +170,7 @@ public class ArticleServiceTest {
 
         return article;
     }
+
     private Hashtag createHashtag(String hashtagName) {
         return createHashtag(1L, hashtagName);
     }
@@ -159,4 +182,37 @@ public class ArticleServiceTest {
         return hashtag;
     }
 
+
+
+    private ArticleDto createArticleDto() {
+        return createArticleDto("title", "content");
+    }
+
+    private ArticleDto createArticleDto(String title, String content) {
+        return ArticleDto.of(
+                1L,
+                createUserAccountDto(),
+                title,
+                content,
+                null,
+                LocalDateTime.now(),
+                "Uno",
+                LocalDateTime.now(),
+                "Uno");
+    }
+
+    private UserAccountDto createUserAccountDto() {
+        return UserAccountDto.of(
+                "uno",
+                "password",
+                "uno@mail.com",
+                "Uno",
+                "This is memo",
+                LocalDateTime.now(),
+                "uno",
+                LocalDateTime.now(),
+                "uno"
+        );
+    }
 }
+
