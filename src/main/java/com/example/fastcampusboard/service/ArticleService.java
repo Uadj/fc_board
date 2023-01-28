@@ -48,6 +48,12 @@ public class ArticleService {
         };
     }
     @Transactional(readOnly = true)
+    public ArticleDto getArticle(Long articleId) {
+        return articleRepository.findById(articleId)
+                .map(ArticleDto::from)
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
+    }
+    @Transactional(readOnly = true)
     public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
         return articleRepository.findById(articleId)
                 .map(ArticleWithCommentsDto::from)
@@ -65,13 +71,28 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public void updateArticle(Long id, ArticleDto dto) {
+    public void updateArticle(Long articleId, ArticleDto dto) {
         try {
-            Article article = articleRepository.getReferenceById(dto.id());
-            if (dto.title() != null) { article.setTitle(dto.title()); }
-            if (dto.content() != null) { article.setContent(dto.content()); }
+            Article article = articleRepository.getReferenceById(articleId);
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+
+            if (article.getUserAccount().equals(userAccount)) {
+                if (dto.title() != null) { article.setTitle(dto.title()); }
+                if (dto.content() != null) { article.setContent(dto.content()); }
+
+                Set<Long> hashtagIds = article.getHashtags().stream()
+                        .map(Hashtag::getId)
+                        .collect(Collectors.toUnmodifiableSet());
+                article.clearHashtags();
+                articleRepository.flush();
+
+                hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
+
+                Set<Hashtag> hashtags = renewHashtagsFromContent(dto.content());
+                article.addHashtags(hashtags);
+            }
         } catch (EntityNotFoundException e) {
-            log.warn("게시글 업데이트 실패. 게시글을 찾을 수 없습니다 - dto: {}", dto);
+            log.warn("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}", e.getLocalizedMessage());
         }
     }
 

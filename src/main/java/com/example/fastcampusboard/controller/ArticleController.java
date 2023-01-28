@@ -26,6 +26,8 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
     private final PaginationService paginationService;
+
+    //리스트 조회
     @GetMapping
     public String articles( @RequestParam(required = false) SearchType searchType,
                             @RequestParam(required = false) String searchValue,
@@ -40,6 +42,7 @@ public class ArticleController {
         return "articles/index";
     }
 
+    //단일 조회
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId));
@@ -51,6 +54,9 @@ public class ArticleController {
 
         return "articles/detail";
     }
+    //
+
+    //생성
     @GetMapping("/form")
     public String articleForm(ModelMap map) {
         map.addAttribute("formStatus", FormStatus.CREATE);
@@ -67,5 +73,29 @@ public class ArticleController {
 
         return "redirect:/articles";
     }
+    //
+
+    //수정
+    @GetMapping("/{articleId}/form")
+    public String updateArticleForm(@PathVariable Long articleId, ModelMap map) {
+        ArticleResponse article = ArticleResponse.from(articleService.getArticle(articleId));
+
+        map.addAttribute("article", article);
+        map.addAttribute("formStatus", FormStatus.UPDATE);
+
+        return "articles/form";
+    }
+
+    @PostMapping("/{articleId}/form")
+    public String updateArticle(
+            @PathVariable Long articleId,
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
+        articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()));
+
+        return "redirect:/articles/" + articleId;
+    }
+    //
 
 }
