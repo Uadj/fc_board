@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,10 +27,12 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class ArticleService {
+
     private final HashtagService hashtagService;
     private final ArticleRepository articleRepository;
     private final UserAccountRepository userAccountRepository;
     private final HashtagRepository hashtagRepository;
+
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchArticles(SearchType searchType, String search_keyword, Pageable pageable) {
         if(search_keyword == null || search_keyword.isBlank()){
@@ -106,6 +109,19 @@ public class ArticleService {
         articleRepository.flush();
 
         hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
+    }
+    @Transactional(readOnly = true)
+    public Page<ArticleDto> searchArticlesViaHashtag(String hashtagName, Pageable pageable) {
+        if (hashtagName == null || hashtagName.isBlank()) {
+            return Page.empty(pageable);
+        }
+
+        return articleRepository.findByHashtagNames(List.of(hashtagName), pageable)
+                .map(ArticleDto::from);
+    }
+
+    public List<String> getHashtags() {
+        return hashtagRepository.findAllHashtagNames(); // TODO: HashtagService 로 이동을 고려해보자.
     }
     private Set<Hashtag> renewHashtagsFromContent(String content) {
         Set<String> hashtagNamesInContent = hashtagService.parseHashtagNames(content);
