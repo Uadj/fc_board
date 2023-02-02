@@ -6,3 +6,7 @@
 
 헤로쿠 배포
 https://board-2.herokuapp.com/
+
+테스트용 <br>
+Id : uno <br>
+Password : asdf1234
