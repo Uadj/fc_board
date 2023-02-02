@@ -1,0 +1,7 @@
+build:
+  command: ./mvnw clean install
+
+run:
+  command: java -jar build/libs/fastcampus-board-0.0.1-SNAPSHOT.jar
+  environment:
+    JAVA_VERSION: 17
