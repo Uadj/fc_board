@@ -1,6 +1,12 @@
-# fastcampus-board
+# 게시판
 
-패스트캠퍼스 게시판 만들기 프로젝트, 자바 + 스프링부트 공부 예제
+게시판 만들기 스프링부트 공부 예제(패스트캠퍼스 강의)
 
-application.yml 파일
-https://github.com/djkeh/fastcampus-project-board/blob/main/src/main/resources/application.yaml
+
+
+헤로쿠 배포
+https://board-2.herokuapp.com/
+
+테스트용 <br>
+Id : uno <br>
+Password : asdf1234

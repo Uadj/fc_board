@@ -69,3 +69,9 @@ sourceSets {
 clean {
     delete file(generated)
 }
+
+jar {
+    manifest{
+        attributes('Main-class': 'com.example.fastcampusboard.FastcampusBoardApplicaion')
+    }
+}

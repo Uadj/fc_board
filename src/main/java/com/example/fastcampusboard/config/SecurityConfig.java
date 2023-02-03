@@ -36,7 +36,12 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/",
                                 "/articles",
-                                "/articles/search-hashtag"
+                                "/articles/*",
+                                "/signUp"
+                        ).permitAll()
+                        .mvcMatchers(
+                                HttpMethod.POST,
+                                "/signUp"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -49,6 +54,7 @@ public class SecurityConfig {
                 )
                 .build();
     }
+
     @Bean
     public UserDetailsService userDetailsService(UserAccountService userAccountService) {
         return username -> userAccountService
@@ -76,7 +82,8 @@ public class SecurityConfig {
                     .map(BoardPrincipal::from)
                     .orElseGet(() ->
                             BoardPrincipal.from(
-                                    userAccountService.saveUser(
+                                    userAccountService.
+                                            saveUser(
                                             username,
                                             dummyPassword,
                                             kakaoResponse.email(),
