@@ -54,6 +54,7 @@ public class SecurityConfig {
                 )
                 .build();
     }
+
     @Bean
     public UserDetailsService userDetailsService(UserAccountService userAccountService) {
         return username -> userAccountService
