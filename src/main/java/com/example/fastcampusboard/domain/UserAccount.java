@@ -15,11 +15,12 @@ import java.util.Objects;
 @Entity
 @Builder
 @AllArgsConstructor
+@Setter
 public class UserAccount extends AuditingFields {
 
     @Id
-    @Column(length = 50)
-    @GeneratedValue
+    @Column(length = 50, unique = true)
+    @Setter
     private String userId;
 
     @Setter

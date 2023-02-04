@@ -1,11 +1,11 @@
 <thlogic>
     <attr sel="#header" th:replace="header :: header" />
     <attr sel="#footer" th:replace="footer :: footer" />
-    <attr sel="#form" action="#" method="POST" th:action="@{/signUp}" th:object="${userForm}">
-        <attr sel="#userId" type="text" th:field="*{userId}"></attr>
-        <attr sel="#password" type="password" th:field="*{password}"></attr>
-        <attr sel="#email" type="email" th:field="*{email}"></attr>
-        <attr sel="#nickname" type="text" th:field="*{nickname}"></attr>
-        <attr sel="#memo" type="text" th:field="*{memo}"></attr>
+    <attr sel="#user-form" th:action th:object="${F}" th:method="post">
+        <attr sel="#userId" th:field="*{userId}"/>
+        <attr sel="#password" th:field="*{password}"/>
+        <attr sel="#email" th:field="*{email}"/>
+        <attr sel="#nickname" th:field="*{nickname}"/>
+        <attr sel="#memo" th:field="*{memo}"/>
     </attr>
 </thlogic>

@@ -3,31 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
 <header id="header">
     header 템플릿 삽입부
     <hr>
 </header>
-
-<form id="form">
-    <label for="userId">ID</label>
-    <input id="userId" type="text" required>
-    <label for="password">Password</label>
-    <input id="password" type="password" required>
-    <label for="email">Email</label>
-    <input id="email" type="email" placeholder="you@example.com">
-    <label for="nickname">Nickname</label>
-    <input id="nickname" type="text">
-    <label for="memo">메모</label>
-    <textarea id="memo" rows="3"></textarea>
-    <button type="submit">가입</button>
-</form>
-
+<div class="container">
+    <header id="article-form-header" class="py-2 text-center">
+        <h3>회원가입</h3>
+    </header>
+    <form action="" id="user-form">
+        <div>
+            <label for="userId" id="label-userId">ID</label>
+            <input type="text"  id="userId" class="form-control" required >
+        </div>
+        <div>
+            <label for="password" id="label-password">Password</label>
+            <input id="password" name="password" type="password" class="form-control"  required >
+        </div>
+        <div>
+            <label for="email" id="label-email">Email</label>
+            <input id="email"  type="email" placeholder="you@example.com" class="form-control">
+        </div>
+        <div>
+            <label for="nickname" id="label-nickname">Nickname</label>
+            <input id="nickname"type="text" class="form-control">
+        </div>
+        <div>
+            <label for="memo" id="label-memo">메모</label>
+            <textarea id="memo" rows="3" class = form-control></textarea>
+        </div>
+        <div>
+            <br>
+            <button id="button" class="btn btn-primary float-right ml-2" type="submit" >가입</button>
+        </div>
+    </form>
+</div>
 <footer id="footer">
     <hr>
     footer 템플릿 삽입부
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </body>
 </html>
