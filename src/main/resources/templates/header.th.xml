@@ -6,4 +6,6 @@
     <attr sel="#login" sec:authorize="!isAuthenticated()" th:href="@{/login}" />
     <attr sel="#kakao-login" sec:authorize="!isAuthenticated()" th:href="@{/oauth2/authorization/kakao}" />
     <attr sel="#logout" sec:authorize="isAuthenticated()" th:href="@{/logout}" />
+    <attr sel="#signUp" sec:authorize="!isAuthenticated()" th:href="@{/signUp}" />
+    <attr sel="#image" th:src="@{images/kakao_login_medium_narrow.png}"/>
 </thlogic>

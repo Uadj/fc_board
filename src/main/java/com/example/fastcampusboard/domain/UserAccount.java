@@ -1,8 +1,6 @@
 package com.example.fastcampusboard.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,22 +13,27 @@ import java.util.Objects;
         @Index(columnList = "createdBy")
 })
 @Entity
+@Builder
+@AllArgsConstructor
+@Setter
 public class UserAccount extends AuditingFields {
+
     @Id
-    @Column(length = 50)
+    @Column(length = 50, unique = true)
+    @Setter
     private String userId;
 
     @Setter
     @Column(nullable = false) private String userPassword;
 
-    @Setter @Column(length = 100) private String email;
+    @Setter @Column(length = 100, unique = true) private String email;
     @Setter @Column(length = 100) private String nickname;
     @Setter private String memo;
 
 
-    protected UserAccount() {}
+    public UserAccount() {}
 
-    private UserAccount(String userId, String userPassword, String email, String nickname, String memo, String createdBy) {
+    public UserAccount(String userId, String userPassword, String email, String nickname, String memo, String createdBy) {
         this.userId = userId;
         this.userPassword = userPassword;
         this.email = email;
