@@ -7,6 +7,7 @@ import com.example.fastcampusboard.dto.security.BoardPrincipal;
 import com.example.fastcampusboard.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +27,7 @@ import java.util.Optional;
 @Slf4j
 public class UserController {
     private final UserAccountService userAccountService;
-
+    private final PasswordEncoder passwordEncoder;
     @GetMapping("/signUp")
     public String signUp(@ModelAttribute("userForm") UserForm userForm){
         return "signUp";
@@ -50,7 +51,7 @@ public class UserController {
 
         userAccountService.saveUser(
             userForm.getUserId(),
-            userForm.getPassword(),
+            passwordEncoder.encode(userForm.getPassword()),
             userForm.getEmail(),
             userForm.getNickname(),
             userForm.getMemo()
