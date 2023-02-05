@@ -11,34 +11,39 @@
     header 템플릿 삽입부
     <hr>
 </header>
-<div class="container">
+<p class="container"  >
     <header id="article-form-header" class="py-2 text-center">
         <h3>회원가입</h3>
     </header>
-    <form action="" id="user-form">
-        <div>
-            <label for="userId" id="label-userId">ID</label>
-            <input type="text"  id="userId" class="form-control" required >
-        </div>
-        <div>
-            <label for="password" id="label-password">Password</label>
-            <input id="password" name="password" type="password" class="form-control"  required >
-        </div>
-        <div>
-            <label for="email" id="label-email">Email</label>
-            <input id="email"  type="email" placeholder="you@example.com" class="form-control">
-        </div>
-        <div>
-            <label for="nickname" id="label-nickname">Nickname</label>
-            <input id="nickname"type="text" class="form-control">
-        </div>
-        <div>
-            <label for="memo" id="label-memo">메모</label>
-            <textarea id="memo" rows="3" class = form-control></textarea>
-        </div>
-        <div>
-            <br>
-            <button id="button" class="btn btn-primary float-right ml-2" type="submit" >가입</button>
+    <form action="" id="user-form" class="center">
+        <div class="form-group m-5" style="align-items: center" >
+            <div>
+                <label for="userId" id="label-userId">ID</label>
+                <input type="text"  id="userId" class="form-control" placeholder="아이디는 영문, 숫자만 가능합니다." required >
+            </div>
+            <div>
+                <label for="password" id="label-password">Password</label>
+                <input id="password" name="password" type="password" class="form-control" placeholder="비밀번호는 8~16자 사이여야합니다." required >
+            </div>
+            <div>
+                <label for="email" id="label-email">이메일</label>
+                <input id="email" type="email" placeholder="example@example.com" class="form-control">
+            </div>
+            <div>
+                <label for="nickname" id="label-nickname">닉네임</label>
+                <input id="nickname" type="text" class="form-control">
+            </div>
+            <div>
+                <label for="memo" id="label-memo">메모</label>
+                <textarea id="memo" rows="3" class = form-control></textarea>
+            </div>
+            <div>
+                <p id="error-msg" style="color: red"></p>
+            </div>
+            <div class="col-sm-8">
+                <br>
+                <button id="button" class="btn btn-primary float-right ml-2" type="submit" >가입</button>
+            </div>
         </div>
     </form>
 </div>
@@ -46,7 +51,7 @@
     <hr>
     footer 템플릿 삽입부
 </footer>
-
+<script src="js/signUp.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </body>
 </html>

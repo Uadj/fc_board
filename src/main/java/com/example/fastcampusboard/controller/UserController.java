@@ -28,12 +28,12 @@ public class UserController {
     private final UserAccountService userAccountService;
 
     @GetMapping("/signUp")
-    public String signUp(@ModelAttribute("F") UserForm userForm){
+    public String signUp(@ModelAttribute("userForm") UserForm userForm){
         return "signUp";
     }
 
     @PostMapping("/signUp")
-    public String signUpRequest(@ModelAttribute @Valid UserForm userForm, BindingResult bindingResult){
+    public String signUpRequest(@Valid @ModelAttribute UserForm userForm, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
             /* 유효성 검사를 통과하지 못 한 필드와 메시지 핸들링 */
@@ -43,10 +43,11 @@ public class UserController {
                 errorMap.put("valid_"+error.getField(), error.getDefaultMessage());
                 log.info("error message : "+error.getDefaultMessage());
             }
-
+            model.addAttribute("msg", bindingResult.getFieldErrors().toString());
             /* 회원가입 페이지로 리턴 */
             return "/signUp";
         }
+
         userAccountService.saveUser(
             userForm.getUserId(),
             userForm.getPassword(),
