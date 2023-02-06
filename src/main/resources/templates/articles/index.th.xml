@@ -19,7 +19,14 @@
               th:selected="${param.searchType != null && (param.searchType.toString == searchType.name)}"
         />
     </attr>
+    <attr sel="#pageOption"
+          th:each="sizeOption : ${sizeOptions}"
+          th:value="${sizeOption}"
+          th:text="${#strings.concat(sizeOption, '개씩 보기')}"
+    />
+    <attr sel="#pageUnit" th:onchange="'window.location.href=\'/articles?size=\' + this.value'" th:field="*{size}"/>
     <attr sel="#search-value" th:value="${param.searchValue}" />
+
 
     <attr sel="#article-table">
         <attr sel="thead/tr">
