@@ -3,7 +3,7 @@
 게시판 만들기 스프링부트 공부 예제(패스트캠퍼스 강의)
 
 레일웨이 배포<br>
-도메인 : https://boardspring.store <br>
+도메인 : https://boardspring.store <br> https 인증서 문제
 원본 주소 : https://web-production-a5ad.up.railway.app
 <br>
 <strike><br>
