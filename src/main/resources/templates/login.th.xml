@@ -1,0 +1,9 @@
+<thlogic>
+    <attr sel="#header" th:replace="header :: header" />
+    <attr sel="#footer" th:replace="footer :: footer" />
+    <attr sel="#emsg" th:if="${param.error}"/>
+    <attr sel="#UserLoginForm" th:action="@{/login}" method="post" >
+<!--        <attr sel="#username" th:field="*{username}" />-->
+<!--        <attr sel="#password" th:field="*{password}"/>-->
+    </attr>
+</thlogic>
