@@ -37,21 +37,32 @@ public class SecurityConfig {
                                 "/",
                                 "/articles",
                                 "/articles/*",
-                                "/signUp"
+                                "/signUp",
+                                "/login"
                         ).permitAll()
                         .mvcMatchers(
                                 HttpMethod.POST,
-                                "/signUp"
+                                "/signUp",
+                                "/login"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults())
-                .logout(logout -> logout.logoutSuccessUrl("/"))
+                .formLogin(form -> form.loginPage("/login")
+                        .permitAll()
+                )
+                .logout()
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/")
+                .and()
                 .oauth2Login(oAuth -> oAuth
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService)
                         )
-                )
+                ).
+                oauth2Login().loginPage("/login")
+                .and()
                 .build();
     }
 
