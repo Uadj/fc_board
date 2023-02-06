@@ -1,13 +1,13 @@
 package com.example.fastcampusboard.controller;
 
-import com.example.fastcampusboard.domain.UserAccount;
-import com.example.fastcampusboard.dto.UserAccountDto;
 import com.example.fastcampusboard.dto.request.UserForm;
-import com.example.fastcampusboard.dto.security.BoardPrincipal;
 import com.example.fastcampusboard.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +15,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,10 +28,15 @@ import java.util.Optional;
 public class UserController {
     private final UserAccountService userAccountService;
     private final PasswordEncoder passwordEncoder;
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
     @GetMapping("/signUp")
     public String signUp(@ModelAttribute("userForm") UserForm userForm){
-        return "signUp";
-    }
+            return "signUp";
+        }
 
     @PostMapping("/signUp")
     public String signUpRequest(@Valid @ModelAttribute UserForm userForm, BindingResult bindingResult, Model model){
@@ -56,6 +61,14 @@ public class UserController {
             userForm.getNickname(),
             userForm.getMemo()
         );
+        return "redirect:/";
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
         return "redirect:/";
     }
 }
