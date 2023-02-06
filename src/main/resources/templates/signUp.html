@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
-
+    <link href="/css/signup.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
@@ -13,39 +13,39 @@
 </header>
 <p class="container"  >
     <header id="article-form-header" class="py-2 text-center">
-        <h3>회원가입</h3>
+    <h1>회원가입</h1>
     </header>
-    <form action="" id="user-form" class="center">
-        <div class="form-group m-5" style="align-items: center" >
-            <div>
-                <label for="userId" id="label-userId">ID</label>
-                <input type="text"  id="userId" class="form-control" placeholder="아이디는 영문, 숫자만 가능합니다." required >
-            </div>
-            <div>
-                <label for="password" id="label-password">Password</label>
-                <input id="password" name="password" type="password" class="form-control" placeholder="비밀번호는 8~16자 사이여야합니다." required >
-            </div>
-            <div>
-                <label for="email" id="label-email">이메일</label>
-                <input id="email" type="email" placeholder="example@example.com" class="form-control">
-            </div>
-            <div>
-                <label for="nickname" id="label-nickname">닉네임</label>
-                <input id="nickname" type="text" class="form-control">
-            </div>
-            <div>
-                <label for="memo" id="label-memo">메모</label>
-                <textarea id="memo" rows="3" class = form-control></textarea>
-            </div>
-            <div>
-                <p id="error-msg" style="color: red"></p>
-            </div>
-            <div class="col-sm-8">
-                <br>
-                <button id="button" class="btn btn-primary float-right ml-2" type="submit" >가입</button>
-            </div>
-        </div>
-    </form>
+<div class="container">
+    <div class="form-content" style="height:auto; display: flex; justify-content: center;" >
+        <form action="" id="user-form"  style="min-width: 350px" class="form-signin">
+                <div>
+                    <label for="userId" id="label-userId">ID</label>
+                    <input type="text"  id="userId" autofocus="autofocus" class="form-control" placeholder="아이디는 영문, 숫자만 가능합니다." required >
+                </div>
+                <div>
+                    <label for="password" id="label-password">Password</label>
+                    <input id="password" name="password" type="password" class="form-control" placeholder="비밀번호는 8~16자 사이여야합니다." required >
+                </div>
+                <div>
+                    <label for="email" id="label-email">이메일</label>
+                    <input id="email" type="email" placeholder="example@example.com" class="form-control">
+                </div>
+                <div>
+                    <label for="nickname" id="label-nickname">닉네임</label>
+                    <input id="nickname" type="text" class="form-control" placeholder="닉네임은 특수문자를 사용할 수 없습니다.">
+                </div>
+                <div>
+                    <label for="memo" id="label-memo">메모</label>
+                    <textarea id="memo" rows="3" class = form-control></textarea>
+                </div>
+                <div>
+                    <p id="error-msg" style="color: red"></p>
+                </div>
+                <div>
+                    <button id="button" class="btn btn-info btn-block" type="submit" >가입</button>
+                </div>
+        </form>
+    </div>
 </div>
 <footer id="footer">
     <hr>
