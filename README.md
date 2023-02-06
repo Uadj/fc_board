@@ -3,14 +3,14 @@
 게시판 만들기 스프링부트 공부 예제(패스트캠퍼스 강의)
 
 레일웨이 배포<br>
-도메인 : https://boardspring.store https 인증서 문제발생 <br> 
 원본 주소 : https://web-production-a5ad.up.railway.app
+도메인 : https://boardspring.store https 인증서 문제발생 <br> 
 <br>
 <strike><br>
 헤로쿠 배포<br>
 https://board-2.herokuapp.com/</strike>
 
-테스트용 <br>
+테스트용 계정 <br>
 Id : uno <br>
 Password : asdf1234
 
