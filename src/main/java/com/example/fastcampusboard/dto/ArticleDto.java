@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RedisHash(value = "article", timeToLive = 30)
+
 public record ArticleDto(
         Long id,
         UserAccountDto userAccountDto,
