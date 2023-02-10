@@ -3,12 +3,14 @@ package com.example.fastcampusboard.dto;
 import com.example.fastcampusboard.domain.Article;
 import com.example.fastcampusboard.domain.UserAccount;
 import com.example.fastcampusboard.dto.HashtagDto;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RedisHash(value = "article", timeToLive = 30)
 public record ArticleDto(
         Long id,
         UserAccountDto userAccountDto,
