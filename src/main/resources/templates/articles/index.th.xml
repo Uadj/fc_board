@@ -82,7 +82,10 @@
         <attr sel="li[1]" th:class="page-item" th:each="pageNumber : ${paginationBarNumbers}">
             <attr sel="a"
                   th:text="${pageNumber + 1}"
-                  th:href="@{/articles(page=${pageNumber})}"
+                  th:href="@{/articles(
+                  page=${pageNumber},
+                  size=${param.size}
+                  )}"
                   th:class="'page-link' + (${pageNumber} == ${articles.number} ? ' disabled' : '')"
             />
         </attr>

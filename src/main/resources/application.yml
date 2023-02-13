@@ -9,9 +9,7 @@ logging:
 
 spring:
   datasource:
-    url: ${LOCAL_DB_URL}
-    username: ${LOCAL_DB_USERNAME}
-    password: ${LOCAL_DB_PASSWORD}
+
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
@@ -41,7 +39,9 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
+  redis:
+    host: localhost
+    port: 6379
 ---
 
 spring:
@@ -51,7 +51,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa.hibernate.ddl-auto: create
   sql.init.mode: always
-
+  redis:
+    host: localhost
+    port: 6379
 ---
 
 spring:
