@@ -2,7 +2,7 @@
 
 게시판 만들기 스프링부트 공부 예제(패스트캠퍼스 강의)
 
-레일웨이 배포(18:00 ~ 익일 09:00 중단)<br>
+레일웨이 배포(무료 사용량 초과 시 월 말에는 작동하지 않을 수 있습니다.)<br>
 도메인 : https://boardspring.store<br>
 원본 주소 : https://web-production-a5ad.up.railway.app <br>
 
