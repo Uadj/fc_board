@@ -12,6 +12,10 @@ KAKAO_OAUTH_CLIENT_ID =
 KAKAO_OAUTH_CLIENT_SECRET =
 ```
 
+JAR 파일 생성
+
+```./gradlew bootJar```
+
 컨테이너 실행
 
 ``` docker-compose -up ```
