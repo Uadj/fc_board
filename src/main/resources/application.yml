@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: prod
     group:
       local:
         - common
@@ -83,7 +83,7 @@ spring:
   config.activate.on-profile: prod
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://board-database:3306/board
+    url: jdbc:mariadb://localhost:3306/board
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
   redis:
