@@ -5,7 +5,7 @@ services:                                               # 이 항목 밑에 실�
     build:
       dockerfile: Dockerfile
       context: ./redis
-    image: ds257873/board-redis
+    image: heddke/board-redis
     ports:
       - "6380:6379"
   board-database:
@@ -13,7 +13,7 @@ services:                                               # 이 항목 밑에 실�
     build:
       dockerfile: Dockerfile
       context: ./database
-    image: ds257873/board-database
+    image: heddke/board-database
     environment:
       - MARIADB_DATABASE=board
       - MARIADB_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
@@ -21,18 +21,20 @@ services:                                               # 이 항목 밑에 실�
       - ./database/config:/etc/mysql/conf.d
       - ./database/init:/docker-entrypoint-initdb.d
     ports:
-      - "3307:3306"      # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+      - "3308:3306"      # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
   board-app:
     container_name: board-app
     build: .
     depends_on:          # DB, REDIS 컨테이너가 실행된 다음 WEB을 실행시킨다.
       - board-database
       - board-redis
-    image: ds257873/board-app
+    image: heddke/board-app
     environment:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - KAKAO_OAUTH_CLIENT_ID=${KAKAO_OAUTH_CLIENT_ID}
+      - KAKAO_OAUTH_CLIENT_SECRET=${KAKAO_OAUTH_CLIENT_SECRET}
     ports:
       - "80:8080"
     restart: always # depends on은 실행 순서만 컨트롤 할뿐,
