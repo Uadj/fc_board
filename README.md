@@ -1,22 +1,27 @@
-# 게시판
+# 게시판 예제
 
-게시판 만들기 스프링부트 공부 예제(패스트캠퍼스 강의)
+## 실행
 
-레일웨이 배포<br>
-도메인 : https://boardspring.store<br>
-원본 주소 : https://web-production-a5ad.up.railway.app <br>
+프로젝트 경로에 .env파일 생성
 
-<br>
-<strike><br>
-헤로쿠 배포<br>
-https://board-2.herokuapp.com/</strike>
+```
+SPRING_DATASOURCE_USERNAME= root
+SPRING_DATASOURCE_PASSWORD= 1234
+SPRING_PROFILES_ACTIVE= prod
+KAKAO_OAUTH_CLIENT_ID =
+KAKAO_OAUTH_CLIENT_SECRET =
+```
+
+컨테이너 실행
+
+``` docker-compose -up ```
+
 
 테스트용 계정 <br>
 Id : uno <br>
 Password : asdf1234
 
-## 기술 세부 스택
-
+docker-compose-
 Spring Boot
 
 * Spring Boot Actuator
@@ -33,17 +38,13 @@ Spring Boot
 
 DB
 
-* MySQL 
+* MariaDB
 
 
 View
 
 * Thymeleaf
 * Bootstrap 5.2.0-Beta1
-
-Deploy
-
-* railway
 
 API Endpoint url
 
