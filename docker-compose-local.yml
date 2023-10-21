@@ -5,7 +5,7 @@ services:                                               # 이 항목 밑에 실�
     build:
       dockerfile: Dockerfile
       context: ./redis
-    image: ds257873/board-redis
+    image: heddke7/board-redis
     ports:
       - "6380:6379"
   board-database:
@@ -13,7 +13,7 @@ services:                                               # 이 항목 밑에 실�
     build:
       dockerfile: Dockerfile
       context: ./database
-    image: ds257873/board-database
+    image: heddke7/board-database
     environment:
       - MARIADB_DATABASE=board
       - MARIADB_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}

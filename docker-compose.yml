@@ -5,7 +5,7 @@ services:                                               # 이 항목 밑에 실�
     build:
       dockerfile: Dockerfile
       context: ./redis
-    image: heddke/board-redis
+    image: heddke7/board-redis
     ports:
       - "6379:6379"
   board-database:
@@ -13,7 +13,7 @@ services:                                               # 이 항목 밑에 실�
     build:
       dockerfile: Dockerfile
       context: ./database
-    image: heddke/board-database
+    image: heddke7/board-database
     environment:
       - MARIADB_DATABASE=board
       - MARIADB_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
@@ -28,10 +28,10 @@ services:                                               # 이 항목 밑에 실�
     depends_on:          # DB, REDIS 컨테이너가 실행된 다음 WEB을 실행시킨다.
       - board-database
       - board-redis
-    image: heddke/board-app
+    image: heddke7/board-app
     environment:
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - KAKAO_OAUTH_CLIENT_ID=${KAKAO_OAUTH_CLIENT_ID}
       - KAKAO_OAUTH_CLIENT_SECRET=${KAKAO_OAUTH_CLIENT_SECRET}
