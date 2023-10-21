@@ -23,7 +23,6 @@ docker run -d -p 6379:6379 --name board-database heddke7/board-redis
 ```
 docker run -d -p 80:8080--name board-app -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=1234 -e SPRING_PROFILES_ACTIVE=prod -e KAKAO_OAUTH_CLIENT_ID=본인Key -e KAKAO_OAUTH_CLIENT_SECRET=본인Key heddke7/board-app
 ```
-```
 
 http://localhost 로 접속
 
