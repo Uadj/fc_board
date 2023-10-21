@@ -1,10 +1,20 @@
 # 게시판 예제
 
 ### 실행
+
+* 프로젝트 경로에 .env 파일 생성
+```
+SPRING_DATASOURCE_USERNAME=root
+SPRING_DATASOURCE_PASSWORD=1234
+SPRING_PROFILES_ACTIVE=prod
+KAKAO_OAUTH_CLIENT_ID =
+KAKAO_OAUTH_CLIENT_SECRET =
+```
+* 터미널에서 컨테이너 실행
 ```
 docker-compose up
 ```
-http://localhost 로 접속
+* http://localhost 로 접속
 
 ---
 
